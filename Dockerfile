@@ -1,9 +1,9 @@
 # Use a Python image with uv pre-installed
-FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+FROM ghcr.io/astral-sh/uv:python3.12-alpine
 
-# Setup a non-root user
-RUN groupadd --system --gid 999 nonroot \
- && useradd --system --gid 999 --uid 999 --create-home nonroot
+# Setup a non-root user (Alpine Linux syntax)
+RUN addgroup -g 1000 -S nonroot \
+ && adduser -u 1000 -D -S -G nonroot nonroot
 
 # Install the project into `/app`
 WORKDIR /app
