@@ -19,11 +19,21 @@ else
     INTERACTIVE=""
 fi
 
+# Build the image with BuildKit enabled
+echo "Building Docker image with BuildKit..."
+IMAGE_ID=$(DOCKER_BUILDKIT=1 docker build -q .)
+
+if [ $? -ne 0 ] || [ -z "$IMAGE_ID" ]; then
+    echo "Error: Docker build failed"
+    exit 1
+fi
+
+echo "Running container with image: $IMAGE_ID"
 docker run \
     --rm \
     --volume .:/app \
     --volume /app/.venv \
     --publish 8000:8000 \
     $INTERACTIVE \
-    $(docker build -q .) \
+    "$IMAGE_ID" \
     "$@"
